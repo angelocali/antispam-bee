@@ -1,0 +1,31 @@
+version: '3'
+services:
+  test-db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+
+  test:
+    depends_on:
+      - test-db
+    build: docker/test-php-alpine-image
+    links:
+      - test-db
+    ports:
+      - "8088:80"
+    volumes:
+      - .:/var/www/html/wp-content/plugins/antispam-bee
+    environment:
+      WORDPRESS_DB_HOST: test-db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: 1
+    command: >
+      /bin/sh -c '
+      cd /var/www/html/wp-content/plugins/antispam-bee;
+      composer install --ignore-platform-reqs;
+      ./bin/install-wp-tests.sh wordpress_test root wordpress test-db latest;
+      tail -f /dev/null
+      '
