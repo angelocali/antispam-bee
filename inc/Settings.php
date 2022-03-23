@@ -2,8 +2,8 @@
 
 namespace AntispamBee;
 
-use AntispamBee\Rules\Controllable;
-use AntispamBee\Rules\Verifiable;
+use AntispamBee\Interfaces\Controllable;
+use AntispamBee\Interfaces\Verifiable;
 
 class Settings {
 	protected static $defaults;
